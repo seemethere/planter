@@ -1,5 +1,5 @@
 GO?=go
-GOFILES:=$(shell find commands -name "*.go")
+GOFILES:=$(shell find cli/ -name "*.go")
 
 all: build
 
