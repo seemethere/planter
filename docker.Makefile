@@ -7,4 +7,4 @@ shell:
 	$(GOLANG_RUN) bash
 
 %:
-	$(MAKE) GO="$(GOLANG_RUN)" $@
+	$(GOLANG_RUN) make $@
