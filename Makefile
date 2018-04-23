@@ -12,7 +12,6 @@ $(DEP): ## Grab golang/dep utility
 build: bin/$(GOARCH)/$(GOOS)/planter
 
 bin/$(GOARCH)/$(GOOS)/planter: cmd/planter/main.go $(GOFILES)
-	@mkdir -p $$(basename $@)
 	$(GO) build -o $@ -v $<
 
 .PHONY: clean
