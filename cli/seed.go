@@ -10,7 +10,7 @@ import (
 )
 
 func InitializeSeed(c *cli.Context) (err error) {
-	cli, err := client.NewEnvClient()
+	client, err := client.NewEnvClient()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*2)
 	defer cancel()
 	if err != nil {
@@ -18,12 +18,22 @@ func InitializeSeed(c *cli.Context) (err error) {
 	}
 	imageName := c.Args().Get(0)
 	log.Debugf("Attempting to grab '%s'", imageName)
-	inspectResults, _, err := cli.ImageInspectWithRaw(ctx, imageName)
+	layers, err := GrabImageLayers(ctx, client, imageName)
 	if err != nil {
 		return
 	}
-	for _, layer := range inspectResults.RootFS.Layers {
-		log.Infof("%s", layer)
+	for _, layer := range layers {
+		log.Info(layer)
 	}
+	return
+}
+
+// Grab the layers for a given image
+func GrabImageLayers(ctx context.Context, client *client.Client, imageName string) (layers []string, err error) {
+	inspectResults, _, err := client.ImageInspectWithRaw(ctx, imageName)
+	if err != nil {
+		return
+	}
+	layers = inspectResults.RootFS.Layers
 	return
 }
